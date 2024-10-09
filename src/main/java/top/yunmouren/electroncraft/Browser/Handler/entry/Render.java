@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import top.yunmouren.electroncraft.Browser.Handler.inherit.IHandler;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -42,17 +43,29 @@ public class Render extends IHandler {
         public ByteBuffer imageBuffer = null;
 
         private ByteBuffer convertToByteBuffer(BufferedImage image) {
+            // Make sure you're using the ARGB format with an alpha channel
+            if (image.getType() != BufferedImage.TYPE_INT_ARGB_PRE) {
+                BufferedImage newImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB_PRE);
+                Graphics2D g = newImage.createGraphics();
+                g.drawImage(image, 0, 0, null);
+                g.dispose();
+                image = newImage;
+            }
+
             int[] pixels = image.getRGB(0, 0, image.getWidth(), image.getHeight(), null, 0, image.getWidth());
             ByteBuffer buffer = ByteBuffer.allocateDirect(image.getWidth() * image.getHeight() * 4); // RGBA = 4 bytes per pixel
+
             for (int pixel : pixels) {
-                buffer.put((byte) ((pixel >> 16) & 0xFF)); // Red
+                buffer.put((byte) (pixel & 0xFF)) ;        // Red
                 buffer.put((byte) ((pixel >> 8) & 0xFF));  // Green
-                buffer.put((byte) (pixel & 0xFF));         // Blue
+                buffer.put((byte) ((pixel >> 16) & 0xFF)); // Blue
                 buffer.put((byte) ((pixel >> 24) & 0xFF)); // Alpha
             }
+
             buffer.flip();
             return buffer;
         }
+
 
         public Frame(String base64Image) throws IOException {
             if (base64Image.startsWith("data:image/png;base64,")) {

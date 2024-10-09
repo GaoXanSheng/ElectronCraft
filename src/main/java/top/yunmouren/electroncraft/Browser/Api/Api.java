@@ -2,6 +2,7 @@ package top.yunmouren.electroncraft.Browser.Api;
 
 
 import com.google.gson.JsonObject;
+import net.minecraft.client.Minecraft;
 import top.yunmouren.electroncraft.Browser.IPC.TcpClient;
 
 import java.util.Timer;
@@ -9,9 +10,11 @@ import java.util.TimerTask;
 
 public class Api {
     public TcpClient NodeJs = new TcpClient();
-    public Api(){
+
+    public Api() {
 
     }
+
     public void CombiningURL(String type, JsonObject data) {
         JsonObject json = new JsonObject();
         json.addProperty("ComeFrom", "Minecraft");
@@ -31,30 +34,22 @@ public class Api {
     }
 
     public void loadUrl(String url) {
-        CombiningURL("LoadUrl", url);
+        CombiningURL("loadUrl", url);
     }
 
+    public void setBrowserSize(int width , int height) {
+        JsonObject data = new JsonObject();
+        data.addProperty("width", width);
+        data.addProperty("height", height);
+        CombiningURL("setBrowserSize", data);
+    }
+    /**
+     * Set how many frames per second the browser transmits
+     */
+    public void setFrameRate(int s) {
+        CombiningURL("setFrameRate", String.valueOf(s));
+    }
     public void openDevTools() {
-        CombiningURL("OpenDevTools", "");
-    }
-
-    private Timer debounceTimer;
-
-    public void setPosition(Number width, Number height) {
-        // 如果之前的定时任务未完成，则取消它
-        if (debounceTimer != null) {
-            debounceTimer.cancel();
-        }
-        // 创建新的定时器任务
-        debounceTimer = new Timer();
-        debounceTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                var data = new JsonObject();
-                data.addProperty("width", width);
-                data.addProperty("height", height);
-                CombiningURL("SetPosition", data);
-            }
-        }, 200);
+        CombiningURL("openDevTools", "");
     }
 }

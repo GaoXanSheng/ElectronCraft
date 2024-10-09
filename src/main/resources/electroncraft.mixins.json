@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "top.yunmouren.electroncraft.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "electroncraft.refmap.json",
+  "mixins": [
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

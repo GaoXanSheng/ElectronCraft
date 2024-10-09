@@ -2,6 +2,7 @@ package top.yunmouren.electroncraft.Browser.Handler.entry;
 
 import com.google.gson.JsonObject;
 import top.yunmouren.electroncraft.Browser.Handler.inherit.IHandler;
+import top.yunmouren.electroncraft.ElectronCraft;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -31,7 +32,7 @@ public class Render extends IHandler {
                 ToBeRendered.add(new Frame(ToBeDecoded.get(0)));
                 ToBeDecoded.remove(0);
             } catch (IOException e) {
-                e.printStackTrace();
+                ElectronCraft.logger.error(e.getMessage());
             }
 
         }

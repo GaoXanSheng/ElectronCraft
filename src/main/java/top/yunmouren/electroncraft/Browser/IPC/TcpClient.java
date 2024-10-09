@@ -46,10 +46,10 @@ public class TcpClient {
         this.out.println(encodeToBase64UrlSafe(message.toString()));
     }
     /**
-     * 将字符串转换为 URL 安全的 Base64 编码
+     * ConvertStringsToURLSafeBase64Encoding
      *
-     * @param input 待编码的字符串
-     * @return URL 安全的 Base64 编码后的字符串
+     * @param input TheStringToBeEncoded
+     * @return Base64EncodedStrings
      */
     public static String encodeToBase64UrlSafe(String input) {
         Base64.Encoder encoder = Base64.getUrlEncoder();

@@ -1,4 +1,4 @@
-package top.yunmouren.electroncraft.Browser.Handler.inherit;
+package top.yunmouren.electroncraft.Browser.Handler;
 
 import com.google.gson.JsonObject;
 

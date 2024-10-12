@@ -2,6 +2,7 @@ package top.yunmouren.electroncraft.Browser;
 
 import net.minecraft.client.Minecraft;
 import top.yunmouren.electroncraft.Browser.Api.Api;
+import top.yunmouren.electroncraft.Browser.Tools.WindowsApi;
 import top.yunmouren.electroncraft.ElectronCraft;
 
 import java.io.BufferedReader;
@@ -14,10 +15,11 @@ public class Browser {
     private Process process;
     public int BrowserPort = RandomPort();
     public Api api = new Api();
+    public WindowsApi windowsApi = new WindowsApi();
     public Browser() {
         new Thread(() -> {
             try {
-                ProcessBuilder processBuilder = new ProcessBuilder(getBroswerPath());
+                ProcessBuilder processBuilder = new ProcessBuilder(Minecraft.getInstance().gameDirectory.getAbsolutePath() + "\\ElectronCraftBrowser\\electroncraftbrowser.exe");
                 Map<String, String> environment = processBuilder.environment();
                 environment.put("LANG", "en_US.UTF-8");
                 environment.put("BrowserPort", String.valueOf(BrowserPort));
@@ -31,20 +33,6 @@ public class Browser {
             if (process != null) process.destroyForcibly();
         }));
     }
-
-    public String getBroswerPath() {
-        //Judgment System
-        return switch (System.getProperty("os.name").toLowerCase()) {
-            case "linux", "mac" ->
-                    Minecraft.getInstance().gameDirectory.getAbsolutePath() + "\\minecraft_of_electron\\minecraft_of_electron";
-            case "windows" ->
-                    Minecraft.getInstance().gameDirectory.getAbsolutePath() + "\\minecraft_of_electron\\minecraft_of_electron.exe";
-            default -> null;
-        };
-    }
-
-
-
     private void handleOutput(Process process) {
         new Thread(() -> {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {

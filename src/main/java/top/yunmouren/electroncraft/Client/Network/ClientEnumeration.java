@@ -1,6 +1,5 @@
 package top.yunmouren.electroncraft.Client.Network;
 
-import icyllis.modernui.ModernUI;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;

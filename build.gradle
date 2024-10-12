@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 buildscript {
     repositories {
         // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
@@ -13,6 +15,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 apply plugin: 'org.spongepowered.mixin'
@@ -163,9 +166,9 @@ dependencies {
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
+//    minecraftLibrary(fileTree('libs'))
+    implementation fileTree('libs')
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    compileOnly(fileTree('libs'))
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
@@ -201,7 +204,10 @@ tasks.named('jar', Jar).configure {
     // This is the preferred method to reobfuscate your jar file
     finalizedBy 'reobfJar'
 }
-
+tasks.withType(ShadowJar).configureEach {
+    archiveClassifier.set('all') // 输出文件名加上 -all 标记
+    configurations = [project.configurations.minecraftLibrary]
+}
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }

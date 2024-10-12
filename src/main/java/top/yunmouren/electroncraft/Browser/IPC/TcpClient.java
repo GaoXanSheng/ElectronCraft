@@ -60,7 +60,7 @@ public class TcpClient {
 
     private String receiveMessage() {
         try {
-            return in.readLine(); // 确保服务器发送的消息包含换行符
+            return in.readLine(); // Make sure that the message sent by the server contains line breaks
         } catch (Exception e) {
             ElectronCraft.logger.error(e.getMessage());
             return null;

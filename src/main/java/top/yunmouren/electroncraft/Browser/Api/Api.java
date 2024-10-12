@@ -2,7 +2,6 @@ package top.yunmouren.electroncraft.Browser.Api;
 
 
 import com.google.gson.JsonObject;
-import net.minecraft.client.Minecraft;
 import top.yunmouren.electroncraft.Browser.IPC.TcpClient;
 
 import java.util.Timer;
@@ -36,18 +35,27 @@ public class Api {
     public void loadUrl(String url) {
         CombiningURL("loadUrl", url);
     }
+    private Timer debounceTimer;
 
     public void setBrowserSize(int width , int height) {
-        JsonObject data = new JsonObject();
-        data.addProperty("width", width);
-        data.addProperty("height", height);
-        CombiningURL("setBrowserSize", data);
+        // If the previous scheduled task was not completed, cancel it
+        if (debounceTimer != null) {
+            debounceTimer.cancel();
+        }
+        // 创建新的定时器任务
+        debounceTimer = new Timer();
+        debounceTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                var data = new JsonObject();
+                data.addProperty("width", width);
+                data.addProperty("height", height);
+                CombiningURL("setBrowserSize", data);
+            }
+        }, 200);
     }
-    /**
-     * Set how many frames per second the browser transmits
-     */
-    public void setFrameRate(int s) {
-        CombiningURL("setFrameRate", String.valueOf(s));
+    public void tick (){
+        CombiningURL("BrowserInit", "");
     }
     public void openDevTools() {
         CombiningURL("openDevTools", "");

@@ -1,7 +1,7 @@
 package top.yunmouren.electroncraft.Browser.Handler.entry;
 
 import com.google.gson.JsonObject;
-import top.yunmouren.electroncraft.Browser.Handler.inherit.IHandler;
+import top.yunmouren.electroncraft.Browser.Handler.IHandler;
 
 /**
  * LoadInitWebPage

@@ -32,8 +32,8 @@ public class Client {
         Handler.register("BrowserInit", new BrowserInit());
     }
     public void onClientSetup(final FMLClientSetupEvent event) {
-//        browser.api.NodeJs.start("localhost", browser.BrowserPort);
-        browser.api.NodeJs.start("localhost", 9090);
+        browser.api.NodeJs.start("localhost", browser.BrowserPort);
+//        browser.api.NodeJs.start("localhost", 9090);
 
         //WaitForTheBrowserToLoad
         tick.scheduleAtFixedRate(() -> {

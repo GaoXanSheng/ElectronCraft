@@ -5,7 +5,6 @@ import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinUser;
-import com.sun.jna.win32.StdCallLibrary;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -13,6 +12,8 @@ import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import top.yunmouren.electroncraft.Client.Client;
+
+import static org.lwjgl.system.windows.User32.WS_EX_NOACTIVATE;
 
 @OnlyIn(Dist.CLIENT)
 public class WindowsApi {
@@ -38,8 +39,9 @@ public class WindowsApi {
             CalculateFrameArea();
             OverlapWindows(MinecrafthWndParent, browserhWndParent);
             user32.SetWindowPos(browserhWndParent, HWND_TOP, 0, 0, rect.right - rect.left, rect.bottom - rect.top, SWP_NOZORDER | SWP_SHOWWINDOW);
-            setNoActivate(MinecrafthWndParent);
-            KeyForwarding(browserhWndParent, MinecrafthWndParent);
+
+//            KeyForwarding(browserhWndParent, MinecrafthWndParent);
+//            MouseForwarding(browserhWndParent, MinecrafthWndParent);
             init = true;
         }
     }
@@ -158,8 +160,7 @@ public class WindowsApi {
         int GWL_EXSTYLE = -20;
         int style = user32.GetWindowLong(hwnd, GWL_EXSTYLE);
         // 设置 WS_EX_NOACTIVATE 样式
-        int WS_EX_NOACTIVATE = 0x08000000;
-        user32.SetWindowLong(hwnd, GWL_EXSTYLE, style | WS_EX_NOACTIVATE);
+        user32.SetWindowLong(hwnd, GWL_EXSTYLE, style + WS_EX_NOACTIVATE);
     }
 
     /**
@@ -169,12 +170,7 @@ public class WindowsApi {
      * @param parentWindowHandle Minecraft
      */
     private void OverlapWindows(WinDef.HWND childWindowHandle, WinDef.HWND parentWindowHandle) {
-        User32.WNDENUMPROC enumChildWindowsCallback = (browserWinHWND, lParam) -> {
-            user32.SetParent(parentWindowHandle, childWindowHandle);
-            user32.SetForegroundWindow(parentWindowHandle);
-            return true;
-        };
-        user32.EnumChildWindows(parentWindowHandle, enumChildWindowsCallback, Pointer.NULL);
-
+        user32.SetParent(parentWindowHandle, childWindowHandle);
+        user32.SetForegroundWindow(parentWindowHandle);
     }
 }

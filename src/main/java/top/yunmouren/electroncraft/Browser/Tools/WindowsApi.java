@@ -44,16 +44,7 @@ public class WindowsApi {
         }
     }
 
-    public interface WindowProc extends StdCallLibrary.StdCallCallback {
-        WinDef.LRESULT callback(WinDef.HWND hWnd, int uMsg, WinDef.WPARAM wParam, WinDef.LPARAM lParam);
-    }
 
-    // DefinitionOfCommonMouseMessages
-    public static final int WM_LBUTTONDOWN = 0x0201; // 鼠标左键按下
-    public static final int WM_LBUTTONUP = 0x0202;   // 鼠标左键抬起
-    public static final int WM_RBUTTONDOWN = 0x0204; // 鼠标右键按下
-    public static final int WM_RBUTTONUP = 0x0205;   // 鼠标右键抬起
-    public static final int WM_MOUSEMOVE = 0x0200;   // 鼠标移动
 
     // Get the original window process and set up a new window process
     public void MouseForwarding(WinDef.HWND childHWnd, WinDef.HWND parentHWnd) {
@@ -61,7 +52,7 @@ public class WindowsApi {
         var originalProc = user32.GetWindowLongPtr(childHWnd, WinUser.GWL_WNDPROC);
 
         // A new window procedure that forwards mouse events to the parent window
-        WindowProc newProc = (hWnd, uMsg, wParam, lParam) -> {
+        WinUser.WindowProc newProc = (hWnd, uMsg, wParam, lParam) -> {
             // 处理鼠标事件
             user32.SendMessage(parentHWnd, uMsg, wParam, lParam);
             return user32.CallWindowProc(originalProc.toPointer(), hWnd, uMsg, wParam, lParam);
@@ -78,7 +69,7 @@ public class WindowsApi {
         // Gets the original window process pointer for the child window
         var originalProc = user32.GetWindowLongPtr(childHWnd, WinUser.GWL_WNDPROC);
         // New window process that forwards key events to the parent window
-        WindowProc newProc = (hWnd, uMsg, wParam, lParam) -> {
+        WinUser.WindowProc newProc = (hWnd, uMsg, wParam, lParam) -> {
             user32.SendMessage(parentHWnd, uMsg, wParam, lParam);
             return user32.CallWindowProc(originalProc.toPointer(), hWnd, uMsg, wParam, lParam);
         };
